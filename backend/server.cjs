@@ -14,10 +14,7 @@ const studentRoutes = require('./routes/studentRoutes');
 dotenv.config();
 connectDB();
 
-// IMPORTANT NOTE: The createAdmin() function should not run every time the server starts.
-// This can cause errors or unexpected behavior in production.
-// It is best practice to run this as a separate, one-time script to set up your database.
-// createAdmin();
+
 
 const app = express();
 
@@ -41,7 +38,7 @@ app.use('/api/student', studentRoutes);
 
 // --- Static File Serving ---
 // Define __dirname for ES Modules compatibility
-const __dirname = path.resolve(); 
+// const __dirname = path.resolve(); 
 // Make the 'uploads' folder public so images can be served
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
