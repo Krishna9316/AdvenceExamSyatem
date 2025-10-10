@@ -28,8 +28,7 @@ app.use(express.json());
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? process.env.FRONTEND_URL // e.g., 'https://your-app-name.vercel.app'
-    : 'https://advence-exam-syatem.vercel.app/'
-    // : 'http://localhost:3000',
+    : 'http://localhost:3000',
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
