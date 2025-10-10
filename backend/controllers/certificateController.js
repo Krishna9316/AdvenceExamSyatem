@@ -1,4 +1,4 @@
-const Certificate = require('../models/Certificate');
+const Certificate = require('../models/certificate');
 
 // @desc    Register a new certificate
 // @route   POST /api/admin/certificates
