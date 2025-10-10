@@ -1,4 +1,4 @@
-const express = require('express'); [cite: 1]
+const express = require('express'); 
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
@@ -8,7 +8,7 @@ const { createAdmin } = require('./controllers/authController'); // Changed from
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const studentRoutes = require('./routes/studentRoutes'); [cite: 3]
+const studentRoutes = require('./routes/studentRoutes'); 
 
 // --- Initial Setup ---
 dotenv.config();
@@ -23,7 +23,7 @@ app.use(express.json());
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ?
- process.env.FRONTEND_URL [cite: 5]
+ process.env.FRONTEND_URL 
     : 'http://localhost:3000',
   optionsSuccessStatus: 200,
 };
@@ -32,7 +32,7 @@ app.use(cors(corsOptions));
 
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes); [cite: 6]
+app.use('/api/admin', adminRoutes); 
 app.use('/api/student', studentRoutes);
 
 // --- Static File Serving ---
@@ -48,12 +48,12 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) =>
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
   );
-} else { [cite: 10]
+} else { 
   // Root route for development mode [cite: 10]
   app.get('/', (req, res) => {
     res.send('API is running in development mode...');
   });
-} [cite: 11]
+}
 // ================================================================= [cite: 11]
 
 
