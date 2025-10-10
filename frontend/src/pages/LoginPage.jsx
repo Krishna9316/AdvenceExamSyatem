@@ -1,6 +1,8 @@
+// src/pages/LoginPage.jsx
+
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api/axios'; // <-- 1. IMPORT THE NEW API FILE
 import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {
@@ -15,7 +17,9 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/login', { userId, password });
+      // --- 2. USE THE NEW API INSTANCE ---
+      // The baseURL is now handled automatically.
+      const res = await API.post('/api/auth/login', { userId, password });
       
       const userRole = res.data.role;
 
