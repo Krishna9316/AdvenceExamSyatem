@@ -31,15 +31,24 @@ const loginUser = async (req, res) => {
 
 // Admin can create a default admin account on first run (optional)
 const createAdmin = async () => {
-    const adminExists = await User.findOne({ role: 'admin' });
-    if (!adminExists) {
-        await User.create({
-            fullName: 'Admin User',
-            userId: 'admin',
-            password: 'adminpassword', // Use a stronger password
-            role: 'admin',
-        });
-        console.log('Default admin created. UserID: admin, Password: adminpassword');
+    try {
+        const adminExists = await User.findOne({ role: 'admin' });
+        if (!adminExists) {
+            await User.create({
+                fullName: 'Admin User',
+                // --- FIX: ADDED PLACEHOLDER DATA FOR REQUIRED FIELDS ---
+                studentName: 'Admin',
+                fatherName: 'N/A',
+                surname: 'User',
+                // --- END OF FIX ---
+                userId: 'admin',
+                password: 'adminpassword', // Use a stronger password in a real app
+                role: 'admin',
+            });
+            console.log('Default admin created. UserID: admin, Password: adminpassword');
+        }
+    } catch (error) {
+        console.error('Error creating default admin:', error.message);
     }
 };
 
