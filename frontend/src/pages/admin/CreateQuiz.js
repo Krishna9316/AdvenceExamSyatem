@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance instead of axios
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { FiPlus, FiTrash2 } from 'react-icons/fi';
@@ -56,7 +56,7 @@ const CreateQuiz = () => {
     const quizData = {
       title,
       description,
-      duration: Number(duration), // ✅ FIX: Ensure duration is a number
+      duration: Number(duration),
       questions: formattedQuestions,
     };
     
@@ -67,7 +67,8 @@ const CreateQuiz = () => {
           Authorization: `Bearer ${user.token}` 
         } 
       };
-      await axios.post('http://localhost:5001/api/admin/quizzes', quizData, config);
+      // --- STEP 2: Use API.post with just the endpoint ---
+      await API.post('/api/admin/quizzes', quizData, config);
       setSuccess('Quiz created successfully! Redirecting...');
       setTimeout(() => navigate('/admin/dashboard'), 2000);
     } catch (err) {
