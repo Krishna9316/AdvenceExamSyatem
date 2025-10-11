@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance instead of axios
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -49,7 +49,8 @@ const CreateStudent = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      await axios.post('http://localhost:5001/api/admin/students', studentData, config);
+      // --- STEP 2: Use API.post with just the endpoint ---
+      await API.post('/api/admin/students', studentData, config);
       setSuccess('Student created successfully! Redirecting...');
       setTimeout(() => navigate('/admin/manage-students'), 2000);
     } catch (err) {
