@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance instead of axios
 import { AuthContext } from '../../context/AuthContext';
 import { FiChevronDown, FiCheckCircle, FiTrash2 } from 'react-icons/fi';
 import ConfirmationModal from '../../components/ConfirmationModal';
@@ -13,13 +13,13 @@ const ViewQuizzes = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState(null);
 
-  // ✅ 1. This function now fetches the list of all quizzes
   useEffect(() => {
     const fetchQuizzes = async () => {
       setIsLoading(true);
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get('http://localhost:5001/api/admin/quizzes', config);
+        // --- STEP 2: Use API.get with just the endpoint ---
+        const { data } = await API.get('/api/admin/quizzes', config);
         setQuizzes(data);
       } catch (error) {
         console.error("Failed to fetch quizzes", error);
@@ -30,16 +30,16 @@ const ViewQuizzes = () => {
     if (user) fetchQuizzes();
   }, [user]);
 
-  // ✅ 2. This function now fetches a quiz's full details when clicked
   const handleToggle = async (index, quizId) => {
     if (activeIndex === index) {
-      setActiveIndex(null); // Close the accordion if it's already open
+      setActiveIndex(null);
     } else {
-      setActiveIndex(index); // Open the new accordion
-      setSelectedQuizData(null); // Show loading state for questions
+      setActiveIndex(index);
+      setSelectedQuizData(null);
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get(`http://localhost:5001/api/admin/quizzes/${quizId}`, config);
+        // --- STEP 3: Use API.get with just the endpoint ---
+        const { data } = await API.get(`/api/admin/quizzes/${quizId}`, config);
         setSelectedQuizData(data);
       } catch (error) {
         console.error("Failed to fetch quiz details", error);
@@ -57,9 +57,10 @@ const ViewQuizzes = () => {
     if (!quizToDelete) return;
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.delete(`http://localhost:5001/api/admin/quizzes/${quizToDelete}`, config);
+      // --- STEP 4: Use API.delete with just the endpoint ---
+      await API.delete(`/api/admin/quizzes/${quizToDelete}`, config);
       setQuizzes(quizzes.filter((quiz) => quiz._id !== quizToDelete));
-      setActiveIndex(null); // Close accordion if it was open
+      setActiveIndex(null);
     } catch (error) {
       console.error('Failed to delete quiz', error);
     } finally {
@@ -94,7 +95,6 @@ const ViewQuizzes = () => {
               </button>
             </div>
             
-            {/* ✅ 3. This section now renders the questions and answers */}
             {activeIndex === index && (
               <div className="p-4 border-t border-gray-700">
                 {selectedQuizData ? (
