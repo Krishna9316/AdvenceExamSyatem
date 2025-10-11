@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance
 import { AuthContext } from '../../context/AuthContext';
 import { FiFileText, FiAward, FiClock, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
@@ -16,9 +16,10 @@ const StudentDashboard = () => {
       setIsLoading(true);
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
+        // --- STEP 2: Use API.get for both requests ---
         const [quizRes, resultRes] = await Promise.all([
-          axios.get('http://localhost:5001/api/student/quizzes', config),
-          axios.get('http://localhost:5001/api/student/results', config)
+          API.get('/api/student/quizzes', config),
+          API.get('/api/student/results', config)
         ]);
         setQuizzes(quizRes.data);
         setResults(resultRes.data);
@@ -38,13 +39,11 @@ const StudentDashboard = () => {
       if (isLoading) return <div className="text-center text-gray-400">Loading exams...</div>;
       if (quizzes.length === 0) return <div className="text-center text-gray-400">No exams are available at the moment.</div>;
       
-      // ✅ 1. Create a Set of completed quiz IDs for easy and fast lookup.
       const completedQuizIds = new Set(results.map(result => result.quiz?._id));
 
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {quizzes.map((quiz) => {
-            // ✅ 2. Check if the student has already taken this quiz.
             const hasTaken = completedQuizIds.has(quiz._id);
 
             return (
@@ -54,7 +53,6 @@ const StudentDashboard = () => {
                   <p className="text-gray-400 mb-4 flex items-center"><FiClock className="mr-2" /> {quiz.duration} Minutes</p>
                 </div>
 
-                {/* ✅ 3. Conditionally render the button based on completion status. */}
                 {hasTaken ? (
                   <button 
                     disabled 
@@ -75,7 +73,6 @@ const StudentDashboard = () => {
       );
     }
     if (activeTab === 'results') {
-        // ... (this section remains the same)
         if (isLoading) return <div className="text-center text-gray-400">Loading results...</div>;
         if (results.length === 0) return <div className="text-center text-gray-400">You have not completed any exams yet.</div>;
         return (

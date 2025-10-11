@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance
 import { AuthContext } from '../../context/AuthContext';
 import Timer from '../../components/Timer';
 
@@ -40,9 +40,9 @@ const QuizPage = () => {
     const fetchQuiz = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get(`http://localhost:5001/api/student/quizzes/${id}`, config);
+        // --- STEP 2: Use API.get to fetch the quiz ---
+        const { data } = await API.get(`/api/student/quizzes/${id}`, config);
         
-        // Shuffle questions and options
         const shuffledQuestionsArray = shuffleQuestionsAndOptions(data.questions);
         const finalShuffled = shuffleArray(shuffledQuestionsArray);
         
@@ -85,13 +85,12 @@ const QuizPage = () => {
     setShowSubmitModal(false);
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      // The backend returns score, total, AND quizTitle
-      const { data } = await axios.post(`http://localhost:5001/api/student/quizzes/${id}/submit`, { 
+      // --- STEP 3: Use API.post to submit the quiz ---
+      const { data } = await API.post(`/api/student/quizzes/${id}/submit`, { 
         answers,
         questionOrder: shuffledQuestions.map(q => q._id)
       }, config);
       
-      // ✅ FIX: Pass the 'quizTitle' from the backend response
       navigate('/result', { state: { score: data.score, total: data.total, quizTitle: data.quizTitle } });
 
     } catch (error) {
@@ -100,6 +99,9 @@ const QuizPage = () => {
     }
   };
 
+  // ... rest of the component remains the same
+  // (No changes needed in the JSX part)
+  
   // SVG Icons
   const Icons = {
     ArrowLeft: () => (

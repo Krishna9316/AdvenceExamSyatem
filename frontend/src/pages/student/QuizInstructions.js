@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance
 import { AuthContext } from '../../context/AuthContext';
 
 const QuizInstructions = () => {
@@ -13,7 +13,8 @@ const QuizInstructions = () => {
     const fetchQuiz = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get(`http://localhost:5001/api/student/quizzes/${id}`, config);
+        // --- STEP 2: Use API.get with just the endpoint ---
+        const { data } = await API.get(`/api/student/quizzes/${id}`, config);
         setQuiz(data);
         setIsLoading(false);
       } catch (error) {
@@ -25,6 +26,9 @@ const QuizInstructions = () => {
       fetchQuiz();
     }
   }, [id, user?.token]);
+
+  // ... rest of the component remains the same
+  // (No changes needed in the JSX part)
 
   // SVG Icons
   const Icons = {
