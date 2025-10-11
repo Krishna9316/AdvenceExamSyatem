@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instance
 import { AuthContext } from '../../context/AuthContext';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
@@ -13,7 +13,8 @@ const ViewResults = () => {
     const fetchResults = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get('http://localhost:5001/api/admin/results', config);
+        // --- STEP 2: Use API.get with just the endpoint ---
+        const { data } = await API.get('/api/admin/results', config);
         setResults(data);
       } catch (error) {
         console.error("Failed to fetch results", error);
@@ -46,7 +47,8 @@ const ViewResults = () => {
       <h1 className="text-4xl font-bold mb-8 text-indigo-400">Student Results</h1>
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 max-w-2xl mx-auto flex flex-col items-center">
         <img
-          src={`http://localhost:5001${student.profilePicture.replace(/\\/g, '/')}`}
+          // --- STEP 3: Construct image URL from environment variable ---
+          src={`${process.env.REACT_APP_API_URL}${student.profilePicture.replace(/\\/g, '/')}`}
           alt="Profile"
           className="h-32 w-32 rounded-full object-cover border-4 border-indigo-500 mb-4"
         />
