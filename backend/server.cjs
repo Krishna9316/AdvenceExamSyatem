@@ -1,29 +1,29 @@
-const express = require('express'); 
+[cite_start]const express = require('express'); [cite: 1]
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
-const { createAdmin } = require('./controllers/authController'); // Changed from source [2]
+[cite_start]const { createAdmin } = require('./controllers/authController'); [cite: 2]
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const studentRoutes = require('./routes/studentRoutes'); 
+[cite_start]const studentRoutes = require('./routes/studentRoutes'); [cite: 3]
 
 // --- Initial Setup ---
 dotenv.config();
 connectDB();
-createAdmin(); // Added this line to run the function
+[cite_start]createAdmin(); [cite: 4]
 
 const app = express();
 
 // --- Middleware ---
 app.use(express.json());
-// Secure CORS policy [cite: 4]
+[cite_start]// Secure CORS policy [cite: 5]
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ?
- process.env.FRONTEND_URL 
+ [cite_start]process.env.FRONTEND_URL [cite: 6]
     : 'http://localhost:3000',
   optionsSuccessStatus: 200,
 };
@@ -32,29 +32,17 @@ app.use(cors(corsOptions));
 
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes); 
-app.use('/api/student', studentRoutes);
+app.use('/api/admin', adminRoutes);
+[cite_start]app.use('/api/student', studentRoutes); [cite: 7]
 
 // --- Static File Serving ---
-// Make the 'uploads' folder public so images can be served [cite: 7]
+[cite_start]// Make the 'uploads' folder public so images can be served [cite: 7]
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-// ================================================================= [cite: 8]
-// --- PRODUCTION DEPLOYMENT CONFIGURATION ---
-// This section should be AFTER your API routes [cite: 8]
-if (process.env.NODE_ENV === 'production') {
-  // 1. Set the frontend build folder as a static folder [cite: 8]
-  app.use(express.static(path.join(__dirname, '/frontend/build')));
-  // 2. For any request that doesn't match the API routes, serve the frontend's index.html file [cite: 9]
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-  );
-} else { 
-  // Root route for development mode [cite: 10]
-  app.get('/', (req, res) => {
-    res.send('API is running in development mode...');
-  });
-}
-// ================================================================= [cite: 11]
+
+// --- Root Route ---
+app.get('/', (req, res) => {
+    res.send('API is running...');
+});
 
 
 const PORT = process.env.PORT || 5001;
