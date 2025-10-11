@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../../api/axios'; // <-- STEP 1: Import the central API instead of axios
 import { AuthContext } from '../../context/AuthContext';
 import { FiEdit, FiTrash2, FiAlertTriangle } from 'react-icons/fi';
 
@@ -16,7 +16,8 @@ const ManageStudents = () => {
     const fetchStudents = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get('http://localhost:5001/api/admin/students', config);
+        // --- STEP 2: Use API.get with just the endpoint ---
+        const { data } = await API.get('/api/admin/students', config);
         setStudents(data);
       } catch (error) {
         console.error('Failed to fetch students', error);
@@ -45,7 +46,8 @@ const ManageStudents = () => {
 
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.delete(`http://localhost:5001/api/admin/students/${studentToDelete._id}`, config);
+      // --- STEP 3: Use API.delete with just the endpoint ---
+      await API.delete(`/api/admin/students/${studentToDelete._id}`, config);
       
       // Update UI by removing the deleted student from the state
       setStudents(students.filter((student) => student._id !== studentToDelete._id));
